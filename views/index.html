@@ -1,0 +1,44 @@
+{{ block "index" . }}
+<!doctype html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/static/css/style.css" rel="stylesheet" />
+    <script src="https://unpkg.com/htmx.org@1.4.0/dist/htmx.min.js"></script>
+  </head>
+
+  <body>
+    <h1>Scrum poker</h1>
+    <div class="questions">
+      {{ range .Game.Questions }} {{ template "question" . }} {{ end }}
+    </div>
+    {{ template "participants" .Game.Participants }}
+    <form hx-post="/register_player" hx-target="#participants">
+      <input type="text" name="name" />
+      <input type="text" name="email" />
+      <button type="submit">Register</button>
+    </form>
+  </body>
+</html>
+{{ end }} {{ block "question" . }}
+<div class="question">
+  <h2>{{.Question}}</h2>
+  <div class="cards">{{ range .Votes }} {{ template "card" . }} {{ end }}</div>
+</div>
+{{ end }} {{ block "card" . }}
+<div class="card">
+  <h1>{{ .Vote }}</h1>
+  <p>{{ .Voter.Name }}</p>
+</div>
+{{ end }} {{ block "participants" .}}
+<div id="participants">
+  <h2>Participants</h2>
+  <ul>
+    {{ range . }}
+    <li>{{ .Name }}</li>
+    {{ end }}
+  </ul>
+</div>
+{{ end }}
